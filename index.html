@@ -55,6 +55,7 @@ function updateURL(){
 
 function calc(){
   let N = parseInt(document.getElementById("N").value);
+  let min = 5000;
 
   // % → 小数に変換
   let atk_s = parseFloat(document.getElementById("atk_s").value)/100;
@@ -71,9 +72,11 @@ function calc(){
 
   let step = 500;
 
-  for(let s=0; s<=N; s+=step){
-    for(let p=0; p<=N-s; p+=step){
+  for(let s = min; s <= N - 2*min; s += step){
+    for(let p = min; p <= N - s - min; p += step){
       let a = N - s - p;
+      
+      if(a < min) continue;
 
       let total =
         damage(s,0.3,atk_s,kill_s) +
