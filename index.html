@@ -70,10 +70,11 @@ function calc(){
   let best = 0;
   let best_ratio = [0,0,0];
 
-  let step = 500;
+  let step1 = 1000; 
+  let step2 = 100;  
 
-  for(let s = min; s <= N - 2*min; s += step){
-    for(let p = min; p <= N - s - min; p += step){
+  for(let s = min; s <= N - 2*min; s += step1){
+    for(let p = min; p <= N - s - min; p += step1){
       let a = N - s - p;
       
       if(a < min) continue;
@@ -83,6 +84,26 @@ function calc(){
         damage(p,1.0,atk_p,kill_p) +
         damage(a,1.4,atk_a,kill_a);
 
+      if(total > best){
+        best = total;
+        best_ratio = [s,p,a];
+      }
+    }
+  }
+  let [bs, bp, ba] = best_ratio;
+  
+  for(let s = bs - 2000; s <= bs + 2000; s += step2){
+    for(let p = bp - 2000; p <= bp + 2000; p += step2){
+      let a = N - s - p;
+      
+      if(s < min || p < min || a < min) continue;
+      if(s < 0 || p < 0 || a < 0) continue;
+      
+      let total =
+      damage(s,0.3,atk_s,kill_s) +
+      damage(p,1.0,atk_p,kill_p) +
+      damage(a,1.4,atk_a,kill_a);
+      
       if(total > best){
         best = total;
         best_ratio = [s,p,a];
