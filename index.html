@@ -57,14 +57,14 @@ function calc(){
   let N = parseInt(N.value);
 
   // % → 小数に変換
-  let atk_s = parseFloat(atk_s.value)/100;
-  let kill_s = parseFloat(kill_s.value)/100;
-
-  let atk_p = parseFloat(atk_p.value)/100;
-  let kill_p = parseFloat(kill_p.value)/100;
-
-  let atk_a = parseFloat(atk_a.value)/100;
-  let kill_a = parseFloat(kill_a.value)/100;
+  let atk_s = parseFloat(document.getElementById("atk_s").value)/100;
+  let kill_s = parseFloat(document.getElementById("kill_s").value)/100;
+  
+  let atk_p = parseFloat(document.getElementById("atk_p").value)/100;
+  let kill_p = parseFloat(document.getElementById("kill_p").value)/100;
+  
+  let atk_a = parseFloat(document.getElementById("atk_a").value)/100;
+  let kill_a = parseFloat(document.getElementById("kill_a").value)/100;
 
   let best = 0;
   let best_ratio = [0,0,0];
