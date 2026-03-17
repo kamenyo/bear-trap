@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>最適兵種比率</title>
+</head>
+<body>
+
+総兵力: <input id="N" value="200000"><br><br>
+
+盾 攻撃% <input id="atk_s" value="20">
+盾 殺傷% <input id="kill_s" value="30"><br>
+
+槍 攻撃% <input id="atk_p" value="50">
+槍 殺傷% <input id="kill_p" value="40"><br>
+
+弓 攻撃% <input id="atk_a" value="80">
+弓 殺傷% <input id="kill_a" value="60"><br><br>
+
+<button onclick="calc()">計算</button>
+
+<p id="result"></p>
+
+<script>
+function f(n){
+  if(n <= 5000) return n;
+  return 5000 + Math.sqrt(n - 5000);
+}
+
+function damage(n, coef, atk, kill){
+  return coef * (1 + atk) * (1 + kill) * f(n);
+}
+
+// URLから値を取得
+function loadFromURL(){
+  let params = new URLSearchParams(location.search);
+
+  ["N","atk_s","kill_s","atk_p","kill_p","atk_a","kill_a"].forEach(id=>{
+    if(params.get(id)){
+      document.getElementById(id).value = params.get(id);
+    }
+  });
+}
+
+// URL生成
+function updateURL(){
+  let params = new URLSearchParams();
+
+  ["N","atk_s","kill_s","atk_p","kill_p","atk_a","kill_a"].forEach(id=>{
+    params.set(id, document.getElementById(id).value);
+  });
+
+  history.replaceState(null, "", "?" + params.toString());
+}
+
+function calc(){
+  let N = parseInt(N.value);
+
+  // % → 小数に変換
+  let atk_s = parseFloat(atk_s.value)/100;
+  let kill_s = parseFloat(kill_s.value)/100;
+
+  let atk_p = parseFloat(atk_p.value)/100;
+  let kill_p = parseFloat(kill_p.value)/100;
+
+  let atk_a = parseFloat(atk_a.value)/100;
+  let kill_a = parseFloat(kill_a.value)/100;
+
+  let best = 0;
+  let best_ratio = [0,0,0];
+
+  let step = 500;
+
+  for(let s=0; s<=N; s+=step){
+    for(let p=0; p<=N-s; p+=step){
+      let a = N - s - p;
+
+      let total =
+        damage(s,0.3,atk_s,kill_s) +
+        damage(p,1.0,atk_p,kill_p) +
+        damage(a,1.4,atk_a,kill_a);
+
+      if(total > best){
+        best = total;
+        best_ratio = [s,p,a];
+      }
+    }
+  }
+
+  // %表示
+  let sum = best_ratio[0]+best_ratio[1]+best_ratio[2];
+  let ps = (best_ratio[0]/sum*100).toFixed(1);
+  let pp = (best_ratio[1]/sum*100).toFixed(1);
+  let pa = (best_ratio[2]/sum*100).toFixed(1);
+
+  document.getElementById("result").innerText =
+    `盾:${ps}% 槍:${pp}% 弓:${pa}% (人数: ${best_ratio.join(", ")})`;
+
+  updateURL();
+}
+
+// 初期化
+loadFromURL();
+</script>
+
+</body>
+</html>
