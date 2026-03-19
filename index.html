@@ -21,7 +21,28 @@
 
 <p id="result"></p>
 
+<button onclick="resetForm()">リセット</button>
+
 <script>
+function resetForm(){
+  // 入力リセット
+  document.getElementById("N").value = 200000;
+
+  ["atk_s","kill_s","atk_p","kill_p","atk_a","kill_a"].forEach(id=>{
+    document.getElementById(id).value = 0;
+  });
+
+  // 英雄もリセット
+  ["hero_s","hero_p","hero_a"].forEach(name=>{
+    document.querySelector(`input[name="${name}"][value="0,0"]`).checked = true;
+  });
+
+  // 結果消す
+  document.getElementById("result").innerText = "";
+
+  // URLも消す
+  history.replaceState(null, "", location.pathname);
+}
 function f(n){
   if(n <= 5000) return n;
   return 5000 + Math.sqrt(n - 5000);
